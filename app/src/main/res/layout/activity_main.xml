@@ -61,10 +61,10 @@
         />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btRegister"
+        android:id="@+id/btLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="register"
+        android:text="Login"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressbar"
@@ -72,12 +72,19 @@
         android:width="350dp"
         app:cornerRadius="30dp"
         />
-    <Button
-        android:id="@+id/btnChangeWifi"
-        android:layout_width="wrap_content"
+
+    <TextView
+        android:id="@+id/textGotoLogin"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ChangeWifi"
+        android:text="Ir para Registro"
+        app:layout_constraintTop_toBottomOf="@+id/btLogin"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btRegister"/>
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="40dp"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

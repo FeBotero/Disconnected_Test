@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,6 +26,7 @@ public class Register extends AppCompatActivity {
     Button btnReg;
     EditText txtEmail, txtPassword;
 
+    TextView gotoLogin;
     ProgressBar progressBar;
     WifiManager mWifiManager;
 
@@ -58,49 +60,60 @@ public class Register extends AppCompatActivity {
         txtPassword= findViewById(R.id.etPassword);
         btnReg = findViewById(R.id.btRegister);
         progressBar = findViewById(R.id.progressbar);
+        gotoLogin = findViewById(R.id.textGotoLogin);
 
+        gotoLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        btnReg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String email,password;
+                progressBar.setVisibility(View.VISIBLE);
+                btnReg.setVisibility(View.GONE);
 
+                email = txtEmail.getText().toString();
+                password = txtPassword.getText().toString();
 
-        String email,password;
-        progressBar.setVisibility(View.VISIBLE);
-        btnReg.setVisibility(View.GONE);
+                if(TextUtils.isEmpty(email)){
+                    Toast.makeText(Register.this, "Email field cannot is empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(TextUtils.isEmpty(password)){
+                    Toast.makeText(Register.this, "Password field cannot is empty", Toast.LENGTH_SHORT).show();
 
-        email = txtEmail.getText().toString();
-        password = txtPassword.getText().toString();
+                }
 
-        if(TextUtils.isEmpty(email)){
-            Toast.makeText(Register.this, "Email field cannot is empty", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if(TextUtils.isEmpty(password)){
-            Toast.makeText(Register.this, "Password field cannot is empty", Toast.LENGTH_SHORT).show();
+                mAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Log.d("Success", "createUserWithEmail:success");
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    progressBar.setVisibility(View.GONE);
+                                    Intent intent = new Intent(getApplicationContext(), Activate.class);
+                                    startActivity(intent);
+                                    finish();
 
-        }
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    Log.w("Failed", "createUserWithEmail:failure", task.getException());
+                                    Toast.makeText(Register.this, "Authentication failed!",
+                                            Toast.LENGTH_SHORT).show();
+                                    progressBar.setVisibility(View.GONE);
+                                    btnReg.setVisibility(View.VISIBLE);
 
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("Success", "createUserWithEmail:success");
-                            Toast.makeText(Register.this, "Authentication sucess!",
-                                    Toast.LENGTH_SHORT).show();
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            progressBar.setVisibility(View.GONE);
-                            mWifiManager.setWifiEnabled(false);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("Failed", "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(Register.this, "Authentication failed!",
-                                    Toast.LENGTH_SHORT).show();
-                            progressBar.setVisibility(View.GONE);
-                            btnReg.setVisibility(View.VISIBLE);
-
-                        }
-                    }
-                });
-
-
+                                }
+                            }
+                        });
+            }
+        });
     }
 }

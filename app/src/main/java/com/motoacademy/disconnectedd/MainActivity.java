@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,9 +23,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
-    Button btnChange ,btnReg;
+    Button btnLog;
     EditText txtEmail, txtPassword;
 
+    TextView gotoRegister;
     ProgressBar progressBar;
     WifiManager mWifiManager;
 
@@ -50,26 +52,31 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mWifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        btnChange = (Button) findViewById(R.id.btnChangeWifi);
+
         txtEmail = findViewById(R.id.etName);
         txtPassword= findViewById(R.id.etPassword);
-        btnReg = findViewById(R.id.btRegister);
+        btnLog = findViewById(R.id.btLogin);
+        gotoRegister = findViewById(R.id.textGotoLogin);
         progressBar = findViewById(R.id.progressbar);
 
+        gotoRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),Register.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
-        if(mWifiManager.isWifiEnabled()){
-            btnChange.setText("WIFI TURN OFF");
-        }else
-        if(!mWifiManager.isWifiEnabled()){
-            btnChange.setText("WIFI TURN ON");
-        }
 
-        btnReg.setOnClickListener(new View.OnClickListener() {
+
+        btnLog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String email,password;
                 progressBar.setVisibility(View.VISIBLE);
-                btnReg.setVisibility(View.GONE);
+                btnLog.setVisibility(View.GONE);
+
 
                 email = txtEmail.getText().toString();
                 password = txtPassword.getText().toString();
@@ -83,26 +90,24 @@ public class MainActivity extends AppCompatActivity {
 
                 }
 
-                mAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+                mAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
-                                    Log.d("Success", "createUserWithEmail:success");
-                                    Toast.makeText(MainActivity.this, "Authentication sucess!",
-                                            Toast.LENGTH_SHORT).show();
-                                    FirebaseUser user = mAuth.getCurrentUser();
-                                    progressBar.setVisibility(View.GONE);
-                                    btnChange.setText("WIFI TURN ON");
-                                    mWifiManager.setWifiEnabled(false);
+                                    progressBar.setVisibility((View.GONE));
+                                    Log.d("Success", "signInWithEmail:success");
+
+
+                                    Intent intent = new Intent(getApplicationContext(),Activate.class);
+                                    startActivity(intent);
+                                    finish();
+
                                 } else {
                                     // If sign in fails, display a message to the user.
-                                    Log.w("Failed", "createUserWithEmail:failure", task.getException());
-                                    Toast.makeText(MainActivity.this, "Authentication failed!",
+                                    Log.w("fail", "signInWithEmail:failure", task.getException());
+                                    Toast.makeText(MainActivity.this, "Authentication failed.",
                                             Toast.LENGTH_SHORT).show();
-                                    progressBar.setVisibility(View.GONE);
-                                    btnReg.setVisibility(View.VISIBLE);
 
                                 }
                             }
@@ -111,19 +116,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        btnChange.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(mWifiManager.isWifiEnabled()){
-                    btnChange.setText("WIFI TURN ON");
-                    mWifiManager.setWifiEnabled(false);
-                }else
-                if(!mWifiManager.isWifiEnabled()){
-                    btnChange.setText("WIFI TURN OFF");
-                    mWifiManager.setWifiEnabled(true);
-                }
-            }
-        });
+
 
     }
 }

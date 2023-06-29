@@ -22,6 +22,64 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+
+class SystemProperties {
+    public static final String GETPROP_EXECUTABLE_PATH = "/system/bin/getprop";
+    public static final String SETPROP_EXECUTABLE_PATH = "/system/bin/setprop";
+    public static String read(String propName) {
+        Process process = null;
+        BufferedReader bufferedReader = null;
+
+        try {
+            process = new ProcessBuilder().command(GETPROP_EXECUTABLE_PATH, propName).redirectErrorStream(true).start();
+            bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line = bufferedReader.readLine();
+            if (line == null){
+                line = ""; //prop not set
+            }
+            Log.i("SystemProperties","Reading prop:" + propName + " value:" + line);
+            return line;
+
+        } catch (Exception e) {
+            Log.e("SystemProperties","Failed to read System Property " + propName,e);
+            return "";
+        } finally{
+            if (bufferedReader != null){
+                try {
+                    bufferedReader.close();
+                } catch (IOException e) {}
+            }
+            if (process != null){
+                process.destroy();
+            }
+        }
+    }
+    public static void write(String propName, String propValue) {
+        Process process = null;
+        BufferedReader bufferedReader = null;
+
+        try {
+            process = new ProcessBuilder().command(SETPROP_EXECUTABLE_PATH, propName, propValue).redirectErrorStream(true).start();
+            bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line = bufferedReader.readLine();
+        } catch (Exception e) {
+            Log.e("SystemProperties","Failed to write System Property " + propName,e);
+        } finally{
+            if (bufferedReader != null){
+                try {
+                    bufferedReader.close();
+                } catch (IOException e) {}
+            }
+            if (process != null){
+                process.destroy();
+            }
+        }
+    }
+}
 public class MainActivity extends AppCompatActivity {
     Button btnLog;
     EditText txtEmail, txtPassword;
@@ -29,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
     TextView gotoRegister;
     ProgressBar progressBar;
     WifiManager mWifiManager;
+
 
     FirebaseAuth mAuth;
 
@@ -97,8 +156,9 @@ public class MainActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     progressBar.setVisibility((View.GONE));
                                     Log.d("Success", "signInWithEmail:success");
-
-
+                                    SystemProperties.read("persist.control.wifi.service");
+                                    SystemProperties.write("persist.control.wifi.service",Boolean.toString(false));
+                                    SystemProperties.read("persist.control.wifi.service");
                                     Intent intent = new Intent(getApplicationContext(),Activate.class);
                                     startActivity(intent);
                                     finish();
@@ -106,6 +166,9 @@ public class MainActivity extends AppCompatActivity {
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w("fail", "signInWithEmail:failure", task.getException());
+                                    SystemProperties.read("persist.control.wifi.service");
+                                    SystemProperties.write("persist.control.wifi.service",Boolean.toString(true));
+                                    SystemProperties.read("persist.control.wifi.service");
                                     Toast.makeText(MainActivity.this, "Authentication failed.",
                                             Toast.LENGTH_SHORT).show();
 

@@ -4,12 +4,15 @@ import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+
 
 public class Activate extends AppCompatActivity {
 
@@ -19,7 +22,9 @@ public class Activate extends AppCompatActivity {
     EditText editPass;
     WifiManager mWifiManager;
 
+
     String pass = "123";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,8 +44,15 @@ public class Activate extends AppCompatActivity {
 
         btnChange.setOnClickListener(new View.OnClickListener() {
 
+
+            public void SetWifi(boolean status) {
+
+                Log.i("STATS", String.valueOf(status));
+            }
             @Override
             public void onClick(View view) {
+
+
 
                 String password = editPass.getText().toString();
 
@@ -50,10 +62,13 @@ public class Activate extends AppCompatActivity {
                 }
 
                 if(password.equals(pass)){
-                    mWifiManager.setWifiEnabled(true);
+
+                    SetWifi(false);
+
                 }else
                 if(!password.equals(pass)){
-                    mWifiManager.setWifiEnabled(false);
+
+                    SetWifi(false);
                 }
 
             }

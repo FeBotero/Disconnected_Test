@@ -22,6 +22,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.DataOutputStream;
+
 public class Register extends AppCompatActivity {
     Button btnReg;
     EditText txtEmail, txtPassword;
@@ -29,8 +31,10 @@ public class Register extends AppCompatActivity {
     TextView gotoLogin;
     ProgressBar progressBar;
     WifiManager mWifiManager;
+    DataOutputStream output;
 
     FirebaseAuth mAuth;
+
 
 
     @Override
@@ -54,13 +58,14 @@ public class Register extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
 
-
         mWifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         txtEmail = findViewById(R.id.etName);
         txtPassword= findViewById(R.id.etPassword);
         btnReg = findViewById(R.id.btRegister);
         progressBar = findViewById(R.id.progressbar);
         gotoLogin = findViewById(R.id.textGotoLogin);
+
+
 
         gotoLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,10 +103,11 @@ public class Register extends AppCompatActivity {
                                     Log.d("Success", "createUserWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     progressBar.setVisibility(View.GONE);
+
+
                                     Intent intent = new Intent(getApplicationContext(), Activate.class);
                                     startActivity(intent);
                                     finish();
-
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w("Failed", "createUserWithEmail:failure", task.getException());
@@ -109,6 +115,8 @@ public class Register extends AppCompatActivity {
                                             Toast.LENGTH_SHORT).show();
                                     progressBar.setVisibility(View.GONE);
                                     btnReg.setVisibility(View.VISIBLE);
+
+
 
                                 }
                             }

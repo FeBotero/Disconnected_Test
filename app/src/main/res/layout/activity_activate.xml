@@ -14,7 +14,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:text="Ativação"
+        android:text="@string/activation"
         android:textSize="50dp"
         android:layout_marginTop="10dp"
         />
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="150dp"
         android:width="300dp"
-        android:hint="password"
+        android:hint="@string/password"
         android:inputType="textPassword"
         android:minHeight="48dp"
         android:textColor="#000000"
@@ -40,7 +40,7 @@
         android:id="@+id/btnChangeWifi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ChangeWifi"
+        android:text="@string/activate"
         android:layout_marginTop="20dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -57,6 +57,6 @@
         android:textSize="20dp"
         android:layout_marginTop="10dp"
         android:textAlignment="center"
-        android:text="Favor entrar em contato com empresa e solicitar Código de ativação"
+        android:text="@string/Message_Activate"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

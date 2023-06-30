@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">Disconnectedd</string>
+    <string name="app_name" translatable="false">Disconnectedd</string>
+    <string name="activate">Activate</string>
+    <string name="activation">Activation</string>
+    <string name="password">password</string>
+    <string name="Message_Activate">Please contact the company and request Activation Code</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="go_to_registration">Go to Registration</string>
+    <string name="register">Register</string>
+    <string name="go_to_login">Go to Login</string>
 </resources>

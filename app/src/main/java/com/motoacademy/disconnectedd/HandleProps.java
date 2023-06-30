@@ -30,7 +30,9 @@ public class HandleProps {
             if (bufferedReader != null){
                 try {
                     bufferedReader.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                    return "";
+                }
             }
             if (process != null){
                 process.destroy();
@@ -51,7 +53,9 @@ public class HandleProps {
             if (bufferedReader != null){
                 try {
                     bufferedReader.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+
+                }
             }
             if (process != null){
                 process.destroy();

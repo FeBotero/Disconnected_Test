@@ -35,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
     FirebaseAuth mAuth;
 
 

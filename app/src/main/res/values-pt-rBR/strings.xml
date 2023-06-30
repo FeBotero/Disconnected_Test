@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="activate">Ativar</string>
+    <string name="activation">Ativação</string>
+    <string name="password">senha</string>
+    <string name="Message_Activate">Favor entrar em contato com empresa e solicitar Código de ativação</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="go_to_registration">Ir para Registro</string>
+    <string name="go_to_login">Ir para Login</string>
+    <string name="register">Registro</string>
+</resources>

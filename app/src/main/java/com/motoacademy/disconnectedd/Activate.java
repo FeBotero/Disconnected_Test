@@ -30,17 +30,9 @@ public class Activate extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activate);
 
-        btnChange = (Button) findViewById(R.id.btnChangeWifi);
+        btnChange =findViewById(R.id.btnChangeWifi);
         mWifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        editPass = (EditText) findViewById(R.id.etPassword);
-
-
-        if(mWifiManager.isWifiEnabled()){
-            btnChange.setText("WIFI TURN OFF");
-        }else
-        if(!mWifiManager.isWifiEnabled()){
-            btnChange.setText("WIFI TURN ON");
-        }
+        editPass =  findViewById(R.id.etPassword);
 
         btnChange.setOnClickListener(new View.OnClickListener() {
 
@@ -67,11 +59,9 @@ public class Activate extends AppCompatActivity {
                     //SystemProperties.write("persist.control.wifi.service",Boolean.toString(false));
                     SetWifi(false);
 
-                }else
-                if(!password.equals(pass)){
-
+                }else {
                     handleProps.read("persist.control.wifi.service");
-                    handleProps.write("persist.control.wifi.service",Boolean.toString(false));
+                    handleProps.write("persist.control.wifi.service", Boolean.toString(false));
                     handleProps.read("persist.control.wifi.service");
                     SetWifi(false);
                 }

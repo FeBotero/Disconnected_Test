@@ -21,7 +21,7 @@ public class Activate extends AppCompatActivity {
 
     EditText editPass;
     WifiManager mWifiManager;
-
+    HandleProps handleProps = new HandleProps();
 
     String pass = "123";
 
@@ -44,10 +44,9 @@ public class Activate extends AppCompatActivity {
 
         btnChange.setOnClickListener(new View.OnClickListener() {
 
-
             public void SetWifi(boolean status) {
 
-                Log.i("STATS", String.valueOf(status));
+                Log.i("STATS_WIFI_CONTROL", String.valueOf(status));
             }
             @Override
             public void onClick(View view) {
@@ -62,12 +61,18 @@ public class Activate extends AppCompatActivity {
                 }
 
                 if(password.equals(pass)){
-
+                    handleProps.read("persist.control.wifi.service");
+                    handleProps.write("persist.control.wifi.service",Boolean.toString(true));
+                    handleProps.read("persist.control.wifi.service");
+                    //SystemProperties.write("persist.control.wifi.service",Boolean.toString(false));
                     SetWifi(false);
 
                 }else
                 if(!password.equals(pass)){
 
+                    handleProps.read("persist.control.wifi.service");
+                    handleProps.write("persist.control.wifi.service",Boolean.toString(false));
+                    handleProps.read("persist.control.wifi.service");
                     SetWifi(false);
                 }
 

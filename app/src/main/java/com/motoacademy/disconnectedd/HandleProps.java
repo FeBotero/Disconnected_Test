@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 public class HandleProps {
     public static final String GETPROP_EXECUTABLE_PATH = "/system/bin/getprop";
     public static final String SETPROP_EXECUTABLE_PATH = "/system/bin/setprop";
-    public static String read(String propName) {
+    public  String read(String propName) {
         Process process = null;
         BufferedReader bufferedReader = null;
 
@@ -37,7 +37,7 @@ public class HandleProps {
             }
         }
     }
-    public static void write(String propName, String propValue) {
+    public  void write(String propName, String propValue) {
         Process process = null;
         BufferedReader bufferedReader = null;
 

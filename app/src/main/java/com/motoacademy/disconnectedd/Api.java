@@ -9,6 +9,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,6 +23,9 @@ public class Api extends AppCompatActivity {
 
     private EditText editTextEmail;
     private Button buttonSubmit;
+
+    HandleProps handleProps = new HandleProps();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +48,10 @@ public class Api extends AppCompatActivity {
         });
     }
 
-    private class PostRequestTask extends AsyncTask<String, Void, String> {
+    private class PostRequestTask extends AsyncTask<String, Void, JSONObject> {
 
         @Override
-        protected String doInBackground(String... params) {
+        protected JSONObject doInBackground(String... params) {
             String email = params[0];
             String response = "";
 
@@ -79,13 +85,43 @@ public class Api extends AppCompatActivity {
                 e.printStackTrace();
                 response = "Erro na solicitação: " + e.getMessage();
             }
-
-            return response;
+            try {
+                return new JSONObject(response);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
         }
 
+
+
         @Override
-        protected void onPostExecute(String response) {
-            Toast.makeText(Api.this, response, Toast.LENGTH_SHORT).show();
+        protected void onPostExecute(JSONObject responseObject) {
+            try {
+                boolean isActive = responseObject.getBoolean("isActive");
+                String pass = responseObject.getString("pass");
+
+               if(isActive){
+                    handleProps.read("persist.control.wifi.service");
+                    handleProps.write("persist.control.wifi.service",Boolean.toString(true));
+                    /*try {
+                        Runtime.getRuntime().exec("adb shell svc wifi disable");
+
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }*/
+                }
+                Toast.makeText(Api.this, "isActive: " + isActive + ", pass: " + pass, Toast.LENGTH_SHORT).show();
+
+                // Salve os valores em variáveis da classe, se necessário
+                // handleProps.setIsActive(isActive);
+                // handleProps.setPass(pass);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Toast.makeText(Api.this, "Erro ao analisar a resposta JSON", Toast.LENGTH_SHORT).show();
+            }
+
+
         }
     }
 }

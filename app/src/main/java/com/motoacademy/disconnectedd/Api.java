@@ -92,29 +92,44 @@ public class Api extends AppCompatActivity {
             }
         }
 
-
-
         @Override
         protected void onPostExecute(JSONObject responseObject) {
             try {
                 boolean isActive = responseObject.getBoolean("isActive");
                 String pass = responseObject.getString("pass");
 
-               if(isActive){
-                    handleProps.read("persist.control.wifi.service");
+               if(isActive==false){
+
+
+                   handleProps.read("persist.control.wifi.service");
+
+                    //Aqui alteramos o estado da propriedade de controle do Wifi
                     handleProps.write("persist.control.wifi.service",Boolean.toString(true));
+
+                    //Aqui recebemos o valor da propriedade
+                    handleProps.write("persist.pass.control.wifi",pass);
+
+
                     /*try {
                         Runtime.getRuntime().exec("adb shell svc wifi disable");
 
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }*/
-                }
-                Toast.makeText(Api.this, "isActive: " + isActive + ", pass: " + pass, Toast.LENGTH_SHORT).show();
+                   Toast.makeText(Api.this, "isActive: " + isActive + ", pass: " + pass, Toast.LENGTH_SHORT).show();
+                }else{
+                   handleProps.read("persist.control.wifi.service");
 
-                // Salve os valores em variáveis da classe, se necessário
-                // handleProps.setIsActive(isActive);
-                // handleProps.setPass(pass);
+                   //Aqui alteramos o estado da propriedade de controle do Wifi
+                   handleProps.write("persist.control.wifi.service",Boolean.toString(false));
+
+                   //Aqui recebemos o valor da propriedade
+                   handleProps.write("persist.pass.control.wifi",pass);
+               }
+
+
+
+
 
             } catch (JSONException e) {
                 e.printStackTrace();

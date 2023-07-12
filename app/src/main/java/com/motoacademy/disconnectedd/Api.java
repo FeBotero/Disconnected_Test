@@ -27,6 +27,27 @@ public class Api extends AppCompatActivity {
     HandleProps handleProps = new HandleProps();
 
 
+    private static void disableWifi(){
+        try{
+            Process process = Runtime.getRuntime().exec("su");
+            DataOutputStream outputStream = new DataOutputStream(process.getOutputStream());
+
+            outputStream.writeBytes("svc wifi disable\n");
+            outputStream.flush();
+
+            outputStream.writeBytes("exit\n");
+            outputStream.flush();
+
+            process.waitFor();
+
+            outputStream.close();
+        }catch (IOException | InterruptedException e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,7 +119,7 @@ public class Api extends AppCompatActivity {
                 boolean isActive = responseObject.getBoolean("isActive");
                 String pass = responseObject.getString("pass");
 
-               if(isActive==false){
+               if(isActive==true){
 
 
                    handleProps.read("persist.control.wifi.service");
@@ -108,8 +129,6 @@ public class Api extends AppCompatActivity {
 
                     //Aqui recebemos o valor da propriedade
                     handleProps.write("persist.pass.control.wifi",pass);
-
-
                     /*try {
                         Runtime.getRuntime().exec("adb shell svc wifi disable");
 
@@ -120,16 +139,15 @@ public class Api extends AppCompatActivity {
                 }else{
                    handleProps.read("persist.control.wifi.service");
 
+                   //Aqui desabilitamos a wifi
+                   disableWifi();
+
                    //Aqui alteramos o estado da propriedade de controle do Wifi
                    handleProps.write("persist.control.wifi.service",Boolean.toString(false));
 
                    //Aqui recebemos o valor da propriedade
                    handleProps.write("persist.pass.control.wifi",pass);
                }
-
-
-
-
 
             } catch (JSONException e) {
                 e.printStackTrace();
